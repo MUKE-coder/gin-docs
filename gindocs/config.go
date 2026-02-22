@@ -141,7 +141,7 @@ func defaultConfig() Config {
 	return Config{
 		Prefix:  "/docs",
 		Version: "1.0.0",
-		UI:      UISwagger,
+		UI:      UIScalar,
 	}
 }
 
@@ -166,9 +166,8 @@ func mergeConfig(configs ...Config) Config {
 	if c.Version != "" {
 		cfg.Version = c.Version
 	}
-	if c.UI != UISwagger {
-		cfg.UI = c.UI
-	}
+	// Always take the user's UI choice — UISwagger is 0, UIScalar is 1.
+	cfg.UI = c.UI
 	cfg.DevMode = c.DevMode
 	cfg.ReadOnly = c.ReadOnly
 	if c.Auth.Type != AuthNone {

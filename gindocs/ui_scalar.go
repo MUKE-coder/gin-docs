@@ -69,7 +69,7 @@ func renderScalarHTML(title, specURL string, cfg Config) string {
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
     <script>
         document.getElementById('api-reference').dataset.configuration = JSON.stringify({
-            theme: 'default',
+            theme: 'kepler',
             %s
             %s
         });
