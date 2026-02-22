@@ -38,8 +38,13 @@ type Config struct {
 	// Version is the API version (default: "1.0.0").
 	Version string
 
-	// UI selects the documentation UI: UISwagger (default) or UIScalar.
+	// UI selects the documentation UI: UIScalar (default) or UISwagger.
 	UI UIType
+
+	// ScalarTheme sets the Scalar UI theme (default: "kepler").
+	// Options: alternate, default, moon, purple, solarized, bluePlanet,
+	// saturn, kepler, mars, deepSpace, laserwave.
+	ScalarTheme string
 
 	// DevMode re-introspects routes on every request when true.
 	// Defaults to auto-detection from GIN_MODE.
@@ -139,9 +144,10 @@ type Section struct {
 // defaultConfig returns a Config with sensible defaults applied.
 func defaultConfig() Config {
 	return Config{
-		Prefix:  "/docs",
-		Version: "1.0.0",
-		UI:      UIScalar,
+		Prefix:      "/docs",
+		Version:     "1.0.0",
+		UI:          UIScalar,
+		ScalarTheme: "kepler",
 	}
 }
 
@@ -168,6 +174,9 @@ func mergeConfig(configs ...Config) Config {
 	}
 	// Always take the user's UI choice — UISwagger is 0, UIScalar is 1.
 	cfg.UI = c.UI
+	if c.ScalarTheme != "" {
+		cfg.ScalarTheme = c.ScalarTheme
+	}
 	cfg.DevMode = c.DevMode
 	cfg.ReadOnly = c.ReadOnly
 	if c.Auth.Type != AuthNone {
