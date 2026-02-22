@@ -30,16 +30,38 @@ go get github.com/MUKE-coder/gin-docs
 package main
 
 import (
+    "net/http"
+
     "github.com/MUKE-coder/gin-docs/gindocs"
     "github.com/gin-gonic/gin"
 )
 
+type User struct {
+    ID    uint   `json:"id" gorm:"primarykey"`
+    Name  string `json:"name" binding:"required"`
+    Email string `json:"email" binding:"required,email"`
+}
+
 func main() {
     r := gin.Default()
 
-    r.GET("/api/users", listUsers)
-    r.POST("/api/users", createUser)
-    r.GET("/api/users/:id", getUser)
+    r.GET("/api/users", func(c *gin.Context) {
+        c.JSON(http.StatusOK, []User{{ID: 1, Name: "John", Email: "john@example.com"}})
+    })
+
+    r.POST("/api/users", func(c *gin.Context) {
+        var u User
+        if err := c.ShouldBindJSON(&u); err != nil {
+            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+            return
+        }
+        u.ID = 1
+        c.JSON(http.StatusCreated, u)
+    })
+
+    r.GET("/api/users/:id", func(c *gin.Context) {
+        c.JSON(http.StatusOK, User{ID: 1, Name: "John", Email: "john@example.com"})
+    })
 
     // One line to add docs!
     gindocs.Mount(r, nil)
